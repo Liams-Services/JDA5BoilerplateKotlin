@@ -6,7 +6,7 @@ plugins {
 
 group = "one.devsky.boilerplates"
 version = "1.0-SNAPSHOT"
-var moltenVersion = "1.0-PRE-9.4"
+var moltenVersion = "1.0-PRE-10"
 
 repositories {
     mavenCentral()
