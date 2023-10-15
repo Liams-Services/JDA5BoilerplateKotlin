@@ -6,14 +6,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import net.dv8tion.jda.api.interactions.components.ActionRow
-import net.dv8tion.jda.api.interactions.components.Modal
 import net.dv8tion.jda.api.interactions.components.text.TextInput
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle
+import net.dv8tion.jda.api.interactions.modals.Modal
 import one.devsky.boilerplates.annotations.SlashCommand
 import one.devsky.boilerplates.interfaces.HasOptions
 
 
-@SlashCommand("modal", "Erzeugt ein Test Modal", guilds = ["828274529070612539"])
+@SlashCommand("modal", "Erzeugt ein Test Modal")
 class ModalTest : ListenerAdapter(), HasOptions {
 
     override fun getOptions(): List<OptionData> {
@@ -48,7 +48,7 @@ class ModalTest : ListenerAdapter(), HasOptions {
             .build()
 
         val modal: Modal = Modal.create("modal", "Support")
-            .addActionRows(
+            .addComponents(
                 if (type == "username") ActionRow.of(username) else ActionRow.of(email),
                 ActionRow.of(body))
             .build()
