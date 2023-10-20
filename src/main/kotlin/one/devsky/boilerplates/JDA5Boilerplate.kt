@@ -3,6 +3,7 @@ package one.devsky.boilerplates
 import dev.fruxz.ascend.extension.logging.getItsLogger
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.requests.GatewayIntent
 import one.devsky.boilerplates.manager.RegisterManager.registerAll
 import one.devsky.boilerplates.manager.RegisterManager.registerCommands
 import one.devsky.boilerplates.utils.Environment
@@ -19,6 +20,7 @@ class JDA5Boilerplate {
         instance = this
 
         jda = JDABuilder.createDefault(Environment.getEnv("BOT_TOKEN"))
+            .enableIntents(GatewayIntent.GUILD_MEMBERS)
             .registerAll()
             .build()
             .awaitReady()

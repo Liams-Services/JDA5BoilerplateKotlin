@@ -1,4 +1,4 @@
-package one.devsky.boilerplates.listeners
+package one.devsky.boilerplates.commands
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
