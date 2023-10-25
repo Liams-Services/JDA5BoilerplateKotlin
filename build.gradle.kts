@@ -19,18 +19,15 @@ repositories {
 }
 
 val shadowDependencies = listOf(
-
     "net.dv8tion:JDA:5.0.0-beta.15",
 
+    // Utils
     "net.oneandone.reflections8:reflections8:0.11.7",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3",
     "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5",
     "com.google.code.gson:gson:2.10.1",
-
-    "com.github.TheFruxz:Ascend:2023.3",
-    "com.github.TheFruxz:Stacked:2023.3",
-
     "io.github.cdimascio:dotenv-kotlin:6.4.1",
+    "com.github.TheFruxz:Ascend:2023.3",
 
 //     "org.jetbrains.exposed:exposed-core:$exposedVersion",
 //     "org.jetbrains.exposed:exposed-dao:$exposedVersion",
