@@ -1,4 +1,4 @@
-package one.devsky.boilerplates.annotations
+package com.liamxsage.boilerplates.annotations
 
 annotation class UserCommand(
     val name: String,

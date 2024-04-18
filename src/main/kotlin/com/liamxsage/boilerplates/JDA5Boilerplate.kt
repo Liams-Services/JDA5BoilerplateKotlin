@@ -1,12 +1,12 @@
-package one.devsky.boilerplates
+package com.liamxsage.boilerplates
 
 import dev.fruxz.ascend.extension.logging.getItsLogger
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
-import one.devsky.boilerplates.manager.RegisterManager.registerAll
-import one.devsky.boilerplates.manager.RegisterManager.registerCommands
-import one.devsky.boilerplates.utils.Environment
+import com.liamxsage.boilerplates.manager.RegisterManager.registerAll
+import com.liamxsage.boilerplates.manager.RegisterManager.registerCommands
+import com.liamxsage.boilerplates.utils.Environment
 
 class JDA5Boilerplate {
 

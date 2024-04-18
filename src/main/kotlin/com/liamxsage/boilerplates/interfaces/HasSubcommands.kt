@@ -1,4 +1,4 @@
-package one.devsky.boilerplates.interfaces
+package com.liamxsage.boilerplates.interfaces
 
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 

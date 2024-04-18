@@ -1,4 +1,4 @@
-package one.devsky.boilerplates.manager
+package com.liamxsage.boilerplates.manager
 
 import dev.fruxz.ascend.extension.logging.getItsLogger
 import net.dv8tion.jda.api.JDA
@@ -6,13 +6,13 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
-import one.devsky.boilerplates.annotations.MessageCommand
-import one.devsky.boilerplates.annotations.SlashCommand
-import one.devsky.boilerplates.annotations.UserCommand
-import one.devsky.boilerplates.interfaces.HasOptions
-import one.devsky.boilerplates.interfaces.HasSubcommandGroups
-import one.devsky.boilerplates.interfaces.HasSubcommands
-import one.devsky.boilerplates.utils.Environment
+import com.liamxsage.boilerplates.annotations.MessageCommand
+import com.liamxsage.boilerplates.annotations.SlashCommand
+import com.liamxsage.boilerplates.annotations.UserCommand
+import com.liamxsage.boilerplates.interfaces.HasOptions
+import com.liamxsage.boilerplates.interfaces.HasSubcommandGroups
+import com.liamxsage.boilerplates.interfaces.HasSubcommands
+import com.liamxsage.boilerplates.utils.Environment
 import org.reflections8.Reflections
 import kotlin.time.measureTime
 

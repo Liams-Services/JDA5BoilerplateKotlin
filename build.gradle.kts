@@ -2,48 +2,60 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm") version "2.0.0-Beta2"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    kotlin("plugin.serialization") version "1.9.10"
+    kotlin("plugin.serialization") version "2.0.0-Beta2"
 }
 
 group = "one.devsky.boilerplates"
 version = "1.0-SNAPSHOT"
 
+val jdaVersion: String by project
 val ktorVersion: String by project
 val exposedVersion: String by project
 
 repositories {
     mavenCentral()
-    maven("https://repo.flawcra.cc/mirrors")
+    maven("https://nexus.flawcra.cc/repository/mirrors/")
+    maven("https://repo.fruxz.dev/releases/")
 }
 
 val shadowDependencies = listOf(
-    "net.dv8tion:JDA:5.0.0-beta.15",
+    // Logging
+    "ch.qos.logback:logback-classic:1.5.3",
+
+    "net.dv8tion:JDA:$jdaVersion",
+
+    "dev.fruxz:ascend:2024.1.1",
+    "io.github.cdimascio:dotenv-kotlin:6.4.1",
+    "com.google.code.gson:gson:2.10.1",
 
     // Utils
+    "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0",
+    "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2",
     "net.oneandone.reflections8:reflections8:0.11.7",
-    "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3",
-    "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5",
-    "com.google.code.gson:gson:2.10.1",
-    "io.github.cdimascio:dotenv-kotlin:6.4.1",
-    "com.github.TheFruxz:Ascend:2023.3",
 
-//     "org.jetbrains.exposed:exposed-core:$exposedVersion",
-//     "org.jetbrains.exposed:exposed-dao:$exposedVersion",
-//     "org.jetbrains.exposed:exposed-jdbc:$exposedVersion",
-//     "org.jetbrains.exposed:exposed-java-time:$exposedVersion",
+    // Database
+    "org.jetbrains.exposed:exposed-core:$exposedVersion",
+    "org.jetbrains.exposed:exposed-dao:$exposedVersion",
+    "org.jetbrains.exposed:exposed-jdbc:$exposedVersion",
+    "org.jetbrains.exposed:exposed-java-time:$exposedVersion",
+    "com.mysql:mysql-connector-j:8.3.0",
+    "org.mariadb.jdbc:mariadb-java-client:3.3.3",
+    "com.zaxxer:HikariCP:5.1.0",
 
-//    "io.ktor:ktor-client-core:$ktorVersion",
-//    "io.ktor:ktor-client-okhttp:$ktorVersion",
-//    "io.ktor:ktor-client-cio:$ktorVersion",
-//    "io.ktor:ktor-serialization-kotlinx-json:$ktorVersion",
-//    "io.ktor:ktor-client-content-negotiation:$ktorVersion",
-
-//    "com.zaxxer:HikariCP:5.0.1"
+    // Ktor (HTTP Client)
+    "io.ktor:ktor-client-core:$ktorVersion",
+    "io.ktor:ktor-client-cio:$ktorVersion",
+    "io.ktor:ktor-client-content-negotiation:$ktorVersion",
+    "io.ktor:ktor-serialization-kotlinx-json:$ktorVersion",
 )
 
 dependencies {
+    // Ktor (HTTP Client)
+    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
+
+
     testImplementation(kotlin("test"))
 
     shadowDependencies.forEach { dependency ->
@@ -59,24 +71,23 @@ tasks {
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
         kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-    }
-
-    withType<ProcessResources> {
-        filesMatching("paper-plugin.yml") {
-            expand(project.properties)
-        }
     }
 
     withType<ShadowJar> {
         mergeServiceFiles()
         configurations = listOf(project.configurations.shadow.get())
         archiveFileName.set("${project.name}.jar")
+
+        manifest {
+            attributes["Main-Class"] = "one.devsky.boilerplates.StartKt"
+        }
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }

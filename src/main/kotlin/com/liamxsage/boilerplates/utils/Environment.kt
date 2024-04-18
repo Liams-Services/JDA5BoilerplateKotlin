@@ -1,4 +1,4 @@
-package one.devsky.boilerplates.utils
+package com.liamxsage.boilerplates.utils
 
 import io.github.cdimascio.dotenv.dotenv
 

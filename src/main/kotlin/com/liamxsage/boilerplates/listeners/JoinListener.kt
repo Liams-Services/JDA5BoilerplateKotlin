@@ -1,4 +1,4 @@
-package one.devsky.boilerplates.listeners
+package com.liamxsage.boilerplates.listeners
 
 import dev.fruxz.ascend.extension.logging.getItsLogger
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
