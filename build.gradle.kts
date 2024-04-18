@@ -81,7 +81,7 @@ tasks {
         archiveFileName.set("${project.name}.jar")
 
         manifest {
-            attributes["Main-Class"] = "one.devsky.boilerplates.StartKt"
+            attributes["Main-Class"] = "com.liamxsage.boilerplates.StartKt"
         }
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
