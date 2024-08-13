@@ -1,10 +1,9 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.0.0-Beta2"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    kotlin("plugin.serialization") version "2.0.0-Beta2"
+    kotlin("jvm") version "2.0.0"
+    application
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 group = "one.devsky.boilerplates"
@@ -15,9 +14,7 @@ val ktorVersion: String by project
 val exposedVersion: String by project
 
 repositories {
-    mavenCentral()
-    maven("https://nexus.flawcra.cc/repository/mirrors/")
-    maven("https://repo.fruxz.dev/releases/")
+    maven("https://nexus.flawcra.cc/repository/maven-mirrors/")
 }
 
 val shadowDependencies = listOf(
@@ -60,34 +57,26 @@ dependencies {
 
     shadowDependencies.forEach { dependency ->
         implementation(dependency)
-        shadow(dependency)
     }
 }
 
 tasks {
-
-    build {
-        dependsOn("shadowJar")
+    test {
+        useJUnitPlatform()
     }
+}
 
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "21"
-        kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+kotlin {
+    jvmToolchain(21)
+    compilerOptions {
+        freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
-
-    withType<ShadowJar> {
-        mergeServiceFiles()
-        configurations = listOf(project.configurations.shadow.get())
-        archiveFileName.set("${project.name}.jar")
-
-        manifest {
-            attributes["Main-Class"] = "com.liamxsage.boilerplates.StartKt"
-        }
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    }
-
 }
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
+application {
+    mainClass = "com.liamxsage.boilerplates.StartKt"
 }

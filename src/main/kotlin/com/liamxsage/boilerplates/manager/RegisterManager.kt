@@ -1,6 +1,5 @@
 package com.liamxsage.boilerplates.manager
 
-import dev.fruxz.ascend.extension.logging.getItsLogger
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.hooks.EventListener
@@ -9,6 +8,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands
 import com.liamxsage.boilerplates.annotations.MessageCommand
 import com.liamxsage.boilerplates.annotations.SlashCommand
 import com.liamxsage.boilerplates.annotations.UserCommand
+import com.liamxsage.boilerplates.extensions.getLogger
 import com.liamxsage.boilerplates.interfaces.HasOptions
 import com.liamxsage.boilerplates.interfaces.HasSubcommandGroups
 import com.liamxsage.boilerplates.interfaces.HasSubcommands
@@ -34,10 +34,10 @@ object RegisterManager {
                 val listener = constructor.newInstance()
                 loadedClasses += clazz.simpleName to listener
                 addEventListeners(listener)
-                getItsLogger().info("Registered listener: ${listener.javaClass.simpleName}")
+                getLogger().info("Registered listener: ${listener.javaClass.simpleName}")
             }
         }
-        getItsLogger().info("Registered listeners in $listenerTime")
+        getLogger().info("Registered listeners in $listenerTime")
 
         return this
     }
@@ -58,7 +58,7 @@ object RegisterManager {
 
                     val command = constructor.newInstance()
                     loadedClasses += clazz.simpleName to command
-                    getItsLogger().info("Registered command class: ${command.javaClass.simpleName}")
+                    getLogger().info("Registered command class: ${command.javaClass.simpleName}")
                 }
 
                 val command = loadedClasses[clazz.simpleName]
@@ -77,12 +77,12 @@ object RegisterManager {
 
                 if(annotation.globalCommand) {
                     upsertCommand(data).queue()
-                    getItsLogger().info("Registered global command: ${annotation.name}")
+                    getLogger().info("Registered global command: ${annotation.name}")
                 } else {
                     for (guildID in annotation.guilds) {
                         getGuildById(guildID)?.let { guild ->
                             guild.upsertCommand(data).queue()
-                            getItsLogger().info("Registered command: ${annotation.name} in guild: ${guild.name}")
+                            getLogger().info("Registered command: ${annotation.name} in guild: ${guild.name}")
                         }
                     }
                 }
@@ -99,17 +99,17 @@ object RegisterManager {
 
                     val command = constructor.newInstance()
                     loadedClasses += clazz.simpleName to command
-                    getItsLogger().info("Registered user command class: ${command.javaClass.simpleName}")
+                    getLogger().info("Registered user command class: ${command.javaClass.simpleName}")
                 }
 
                 if(annotation.globalCommand) {
                     upsertCommand(data).queue()
-                    getItsLogger().info("Registered global user command: ${annotation.name}")
+                    getLogger().info("Registered global user command: ${annotation.name}")
                 } else {
                     for (guildID in (guildIds + annotation.guilds).distinct().filterNot { it.isEmpty() }) {
                         getGuildById(guildID)?.let { guild ->
                             guild.upsertCommand(data).queue()
-                            getItsLogger().info("Registered user command: ${annotation.name} in guild: ${guild.name}")
+                            getLogger().info("Registered user command: ${annotation.name} in guild: ${guild.name}")
                         }
                     }
                 }
@@ -127,23 +127,23 @@ object RegisterManager {
 
                     val command = constructor.newInstance()
                     loadedClasses += clazz.simpleName to command
-                    getItsLogger().info("Registered message command class: ${command.javaClass.simpleName}")
+                    getLogger().info("Registered message command class: ${command.javaClass.simpleName}")
                 }
 
                 if(annotation.globalCommand) {
                     upsertCommand(data).queue()
-                    getItsLogger().info("Registered global message command: ${annotation.name}")
+                    getLogger().info("Registered global message command: ${annotation.name}")
                 } else {
                     for (guildID in (guildIds + annotation.guilds).distinct().filterNot { it.isEmpty() }) {
                         getGuildById(guildID)?.let { guild ->
                             guild.upsertCommand(data).queue()
-                            getItsLogger().info("Registered message command: ${annotation.name} in guild: ${guild.name}")
+                            getLogger().info("Registered message command: ${annotation.name} in guild: ${guild.name}")
                         }
                     }
                 }
             }
         }
-        getItsLogger().info("Registered commands in $commandsTime")
+        getLogger().info("Registered commands in $commandsTime")
 
         return this
     }

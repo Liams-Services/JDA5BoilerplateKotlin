@@ -1,6 +1,6 @@
 package com.liamxsage.boilerplates
 
-import dev.fruxz.ascend.extension.logging.getItsLogger
+import com.liamxsage.boilerplates.extensions.getLogger
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
@@ -26,6 +26,6 @@ class JDA5Boilerplate {
             .awaitReady()
             .registerCommands()
 
-        getItsLogger().info("Bot is ready! ${jda.selfUser.name} - ${jda.selfUser.id} on ${jda.guilds.size} guilds")
+        getLogger().info("Bot is ready! ${jda.selfUser.name} - ${jda.selfUser.id} on ${jda.guilds.size} guilds")
     }
 }
