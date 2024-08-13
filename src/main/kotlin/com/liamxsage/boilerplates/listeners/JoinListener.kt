@@ -1,6 +1,6 @@
 package com.liamxsage.boilerplates.listeners
 
-import com.liamxsage.boilerplates.extensions.getLogger
+import com.liamxsage.klassicx.extensions.getLogger
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 

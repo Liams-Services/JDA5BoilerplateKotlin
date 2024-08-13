@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands
 import com.liamxsage.boilerplates.annotations.MessageCommand
 import com.liamxsage.boilerplates.annotations.SlashCommand
 import com.liamxsage.boilerplates.annotations.UserCommand
-import com.liamxsage.boilerplates.extensions.getLogger
+import com.liamxsage.klassicx.extensions.getLogger
 import com.liamxsage.boilerplates.interfaces.HasOptions
 import com.liamxsage.boilerplates.interfaces.HasSubcommandGroups
 import com.liamxsage.boilerplates.interfaces.HasSubcommands

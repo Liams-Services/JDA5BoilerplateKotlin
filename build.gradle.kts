@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm") version "2.0.0"
     application
@@ -23,6 +21,7 @@ val shadowDependencies = listOf(
 
     "net.dv8tion:JDA:$jdaVersion",
 
+    "com.liamxsage:KlassicX:2024.7.13-18.48",
     "dev.fruxz:ascend:2024.1.1",
     "io.github.cdimascio:dotenv-kotlin:6.4.1",
     "com.google.code.gson:gson:2.10.1",
