@@ -5,8 +5,8 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
 import com.liamxsage.boilerplates.manager.RegisterManager.registerAll
 import com.liamxsage.boilerplates.manager.RegisterManager.registerCommands
-import com.liamxsage.boilerplates.utils.Environment
 import com.liamxsage.klassicx.extensions.getLogger
+import com.liamxsage.klassicx.tools.Environment
 
 class JDA5Boilerplate {
 
@@ -19,7 +19,7 @@ class JDA5Boilerplate {
     init {
         instance = this
 
-        jda = JDABuilder.createDefault(Environment.getEnv("BOT_TOKEN"))
+        jda = JDABuilder.createDefault(Environment.getString("BOT_TOKEN"))
             .enableIntents(GatewayIntent.GUILD_MEMBERS)
             .registerAll()
             .build()

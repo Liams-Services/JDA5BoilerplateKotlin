@@ -6,13 +6,20 @@ import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import com.liamxsage.boilerplates.annotations.MessageCommand
+import com.liamxsage.boilerplates.annotations.PermissionScope
 import com.liamxsage.boilerplates.annotations.SlashCommand
 import com.liamxsage.boilerplates.annotations.UserCommand
 import com.liamxsage.klassicx.extensions.getLogger
 import com.liamxsage.boilerplates.interfaces.HasOptions
 import com.liamxsage.boilerplates.interfaces.HasSubcommandGroups
 import com.liamxsage.boilerplates.interfaces.HasSubcommands
-import com.liamxsage.boilerplates.utils.Environment
+import com.liamxsage.klassicx.tools.Environment
+import dev.fruxz.ascend.extension.forceCast
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
+import net.dv8tion.jda.api.interactions.commands.build.CommandData
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
+import org.checkerframework.checker.units.qual.C
 import org.reflections8.Reflections
 import kotlin.time.measureTime
 
@@ -21,7 +28,7 @@ object RegisterManager {
     private var loadedClasses = mapOf<String, Any>()
 
     fun JDABuilder.registerAll() : JDABuilder {
-        val reflections = Reflections("one.devsky.boilerplates")
+        val reflections = Reflections("com.liamxsage.boilerplates")
 
         // Registering both ListenerAdapters and EventListeners
         val listenerTime = measureTime {
@@ -43,108 +50,118 @@ object RegisterManager {
     }
 
     fun JDA.registerCommands(): JDA {
-        val reflections = Reflections("one.devsky.boilerplates")
-        val guildIds = Environment.getEnv("GUILD_IDS")?.split(",")?.toTypedArray() ?: arrayOf()
+        val reflections = Reflections("com.liamxsage.boilerplates")
 
         // Registering commands
         val commandsTime = measureTime {
-            for (clazz in reflections.getTypesAnnotatedWith(SlashCommand::class.java)) {
-                val annotation = clazz.getAnnotation(SlashCommand::class.java)
-                val data = Commands.slash(annotation.name, annotation.description)
-
-                if (clazz.simpleName !in loadedClasses) {
-                    val constructor = clazz.getDeclaredConstructor()
-                    constructor.trySetAccessible()
-
-                    val command = constructor.newInstance()
-                    loadedClasses += clazz.simpleName to command
-                    getLogger().info("Registered command class: ${command.javaClass.simpleName}")
-                }
-
-                val command = loadedClasses[clazz.simpleName]
-
-                if (command is HasOptions) {
-                    data.addOptions(command.getOptions())
-                }
-
-                if (command is HasSubcommandGroups) {
-                    data.addSubcommandGroups(command.getChoices())
-                }
-
-                if (command is HasSubcommands) {
-                    data.addSubcommands(command.getSubCommands())
-                }
-
-                if(annotation.globalCommand) {
-                    upsertCommand(data).queue()
-                    getLogger().info("Registered global command: ${annotation.name}")
-                } else {
-                    for (guildID in annotation.guilds) {
-                        getGuildById(guildID)?.let { guild ->
-                            guild.upsertCommand(data).queue()
-                            getLogger().info("Registered command: ${annotation.name} in guild: ${guild.name}")
-                        }
-                    }
-                }
-            }
+            registerSlashCommands(reflections)
 
             // UserCommands
-            for (clazz in reflections.getTypesAnnotatedWith(UserCommand::class.java)) {
-                val annotation = clazz.getAnnotation(UserCommand::class.java)
-                val data = Commands.user(annotation.name)
-
-                if (clazz.simpleName !in loadedClasses) {
-                    val constructor = clazz.getDeclaredConstructor()
-                    constructor.trySetAccessible()
-
-                    val command = constructor.newInstance()
-                    loadedClasses += clazz.simpleName to command
-                    getLogger().info("Registered user command class: ${command.javaClass.simpleName}")
-                }
-
-                if(annotation.globalCommand) {
-                    upsertCommand(data).queue()
-                    getLogger().info("Registered global user command: ${annotation.name}")
-                } else {
-                    for (guildID in (guildIds + annotation.guilds).distinct().filterNot { it.isEmpty() }) {
-                        getGuildById(guildID)?.let { guild ->
-                            guild.upsertCommand(data).queue()
-                            getLogger().info("Registered user command: ${annotation.name} in guild: ${guild.name}")
-                        }
-                    }
-                }
-            }
-
+            registerUserCommands(reflections)
 
             // MessageCommands
-            for (clazz in reflections.getTypesAnnotatedWith(MessageCommand::class.java)) {
-                val annotation = clazz.getAnnotation(MessageCommand::class.java)
-                val data = Commands.message(annotation.name)
-
-                if (clazz.simpleName !in loadedClasses) {
-                    val constructor = clazz.getDeclaredConstructor()
-                    constructor.trySetAccessible()
-
-                    val command = constructor.newInstance()
-                    loadedClasses += clazz.simpleName to command
-                    getLogger().info("Registered message command class: ${command.javaClass.simpleName}")
-                }
-
-                if(annotation.globalCommand) {
-                    upsertCommand(data).queue()
-                    getLogger().info("Registered global message command: ${annotation.name}")
-                } else {
-                    for (guildID in (guildIds + annotation.guilds).distinct().filterNot { it.isEmpty() }) {
-                        getGuildById(guildID)?.let { guild ->
-                            guild.upsertCommand(data).queue()
-                            getLogger().info("Registered message command: ${annotation.name} in guild: ${guild.name}")
-                        }
-                    }
-                }
-            }
+            registerMessageCommands(reflections)
         }
         getLogger().info("Registered commands in $commandsTime")
 
         return this
+    }
+
+    private fun JDA.registerMessageCommands(
+        reflections: Reflections
+    ) {
+        for (clazz in reflections.getTypesAnnotatedWith(MessageCommand::class.java)) {
+            val annotation = clazz.getAnnotation(MessageCommand::class.java)
+            val data = Commands.message(annotation.name)
+                .setPermissionScope<CommandData>(annotation.permissionScope)
+
+            if (clazz.simpleName !in loadedClasses) {
+                val constructor = clazz.getDeclaredConstructor()
+                constructor.trySetAccessible()
+
+                val command = constructor.newInstance()
+                loadedClasses += clazz.simpleName to command
+                getLogger().info("Registered message command class: ${command.javaClass.simpleName}")
+            }
+
+            upsertCommand(data).queue()
+            getLogger().info("Registered global message command: ${annotation.name}")
+        }
+    }
+
+    private fun JDA.registerUserCommands(
+        reflections: Reflections,
+    ) {
+        for (clazz in reflections.getTypesAnnotatedWith(UserCommand::class.java)) {
+            val annotation = clazz.getAnnotation(UserCommand::class.java)
+            val data = Commands.user(annotation.name)
+                .setPermissionScope<CommandData>(annotation.permissionScope)
+
+            if (clazz.simpleName !in loadedClasses) {
+                val constructor = clazz.getDeclaredConstructor()
+                constructor.trySetAccessible()
+
+                val command = constructor.newInstance()
+                loadedClasses += clazz.simpleName to command
+                getLogger().info("Registered user command class: ${command.javaClass.simpleName}")
+            }
+
+            upsertCommand(data).queue()
+            getLogger().info("Registered global user command: ${annotation.name}")
+        }
+    }
+
+    private fun JDA.registerSlashCommands(reflections: Reflections) {
+        for (clazz in reflections.getTypesAnnotatedWith(SlashCommand::class.java)) {
+            val annotation = clazz.getAnnotation(SlashCommand::class.java)
+            val data = Commands.slash(annotation.name, annotation.description)
+                .setPermissionScope<SlashCommandData>(annotation.permissionScope)
+
+            if (clazz.simpleName !in loadedClasses) {
+                val constructor = clazz.getDeclaredConstructor()
+                constructor.trySetAccessible()
+
+                val command = constructor.newInstance()
+                loadedClasses += clazz.simpleName to command
+                getLogger().info("Registered command class: ${command.javaClass.simpleName}")
+            }
+
+            val command = loadedClasses[clazz.simpleName]
+            addCommandDataOptions(command, data)
+
+            upsertCommand(data).queue()
+            getLogger().info("Registered global command: ${annotation.name}")
+        }
+    }
+
+    private fun addCommandDataOptions(command: Any?, data: SlashCommandData) {
+        if (command is HasOptions) {
+            data.addOptions(command.getOptions())
+        }
+
+        if (command is HasSubcommandGroups) {
+            data.addSubcommandGroups(command.getChoices())
+        }
+
+        if (command is HasSubcommands) {
+            data.addSubcommands(command.getSubCommands())
+        }
+    }
+
+    private fun <T : CommandData> CommandData.setPermissionScope(permissionScope: PermissionScope): T {
+        when (permissionScope) {
+            PermissionScope.MODERATOR -> {
+                defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.MODERATE_MEMBERS)
+            }
+
+            PermissionScope.ADMIN -> {
+                defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)
+            }
+
+            else -> {
+                /** Do Nothing  **/
+            }
+        }
+        return this.forceCast()
     }
 }

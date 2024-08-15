@@ -1,5 +1,6 @@
 package com.liamxsage.boilerplates.commands
 
+import com.liamxsage.boilerplates.annotations.PermissionScope
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -13,7 +14,7 @@ import com.liamxsage.boilerplates.annotations.SlashCommand
 import com.liamxsage.boilerplates.interfaces.HasOptions
 
 
-@SlashCommand("modal", "Erzeugt ein Test Modal")
+@SlashCommand("modal", "Erzeugt ein Test Modal", permissionScope = PermissionScope.USER)
 class ModalTest : ListenerAdapter(), HasOptions {
 
     override fun getOptions(): List<OptionData> {

@@ -19,3 +19,12 @@
     <a href="https://liamxsage.com">Sage Website (Soon)</a>
   </p>
 </div>
+
+
+# Usage
+
+1. Clone the repository
+2. Open the project in your IDE
+3. Edit to your liking
+4. Run `gradlew distZip` to create a zip file with the bot and a run script
+5. Extract the zip file and run the script for your system
