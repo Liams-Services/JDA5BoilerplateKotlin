@@ -4,7 +4,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.0"
 }
 
-group = "one.devsky.boilerplates"
+group = "com.liamxsage.boilerplates"
 version = "1.0-SNAPSHOT"
 
 val jdaVersion: String by project

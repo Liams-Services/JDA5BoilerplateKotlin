@@ -1,25 +1,23 @@
 package com.liamxsage.boilerplates.manager
 
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.JDABuilder
-import net.dv8tion.jda.api.hooks.EventListener
-import net.dv8tion.jda.api.hooks.ListenerAdapter
-import net.dv8tion.jda.api.interactions.commands.build.Commands
 import com.liamxsage.boilerplates.annotations.MessageCommand
 import com.liamxsage.boilerplates.annotations.PermissionScope
 import com.liamxsage.boilerplates.annotations.SlashCommand
 import com.liamxsage.boilerplates.annotations.UserCommand
-import com.liamxsage.klassicx.extensions.getLogger
 import com.liamxsage.boilerplates.interfaces.HasOptions
 import com.liamxsage.boilerplates.interfaces.HasSubcommandGroups
 import com.liamxsage.boilerplates.interfaces.HasSubcommands
-import com.liamxsage.klassicx.tools.Environment
+import com.liamxsage.klassicx.extensions.getLogger
 import dev.fruxz.ascend.extension.forceCast
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.hooks.EventListener
+import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
+import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
-import org.checkerframework.checker.units.qual.C
 import org.reflections8.Reflections
 import kotlin.time.measureTime
 

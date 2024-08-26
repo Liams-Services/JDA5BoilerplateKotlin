@@ -1,12 +1,12 @@
 package com.liamxsage.boilerplates
 
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.JDABuilder
-import net.dv8tion.jda.api.requests.GatewayIntent
 import com.liamxsage.boilerplates.manager.RegisterManager.registerAll
 import com.liamxsage.boilerplates.manager.RegisterManager.registerCommands
 import com.liamxsage.klassicx.extensions.getLogger
 import com.liamxsage.klassicx.tools.Environment
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.requests.GatewayIntent
 
 class JDA5Boilerplate {
 
